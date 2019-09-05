@@ -1,0 +1,4 @@
+﻿  Application3D.cpp
+c:\users\s173004\desktop\second year\gitkraken\secondyear_computergraphics\computergraphics_opengl_app\src\application3d.cpp(103): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\s173004\desktop\second year\gitkraken\secondyear_computergraphics\computergraphics_opengl_app\src\application3d.cpp(111): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  ComputerGraphics_OpenGL_App.vcxproj -> C:\Users\s173004\Desktop\Second Year\GitKraken\SecondYear_ComputerGraphics\ComputerGraphics_OpenGL_App\Debug\ComputerGraphics_OpenGL_App.exe
