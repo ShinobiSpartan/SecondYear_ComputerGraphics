@@ -29,7 +29,6 @@
     <ClCompile Include="..\src\gl_core_4_4.c" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="FlyCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\dep\aieutilities\Gizmos.h" />
@@ -42,7 +41,6 @@
     <ClInclude Include="..\src\Application3D.h" />
     <ClInclude Include="..\src\gl_core_4_4.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="FlyCamera.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
