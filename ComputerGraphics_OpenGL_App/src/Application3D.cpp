@@ -63,18 +63,22 @@ bool Application3D::startup()
 		return false;
 	}
 
-	if (m_bunnyMesh.load("../assets/stanford/bunny.obj") == false) {
-		printf("Bunny Mesh Error! \n");
+	if (m_dragonMesh.load("../assets/stanford/dragon.obj") == false) {
+		printf("Dragon Mesh Error! \n");
 		return false;
 	}
 
-	m_bunnyTransform = 
-	{	
+	m_dragonTransform =
+	{
 		0.5f, 0, 0, 0,
 		0, 0.5f, 0, 0,
 		0, 0, 0.5f, 0,
-		0, 0, 0, 1.0f	
+		0, 0, 0, 1.0f
 	};
+
+	m_light.diffuse = { 1,0,0 };
+	m_light.specular = { 1,0,0 };
+	m_ambientLight = { 0.25f,0.25f,0.25f };
 	
 	return true;
 }
@@ -163,17 +167,22 @@ void Application3D::draw()
 	m_phongShader.bind();
 
 	// Bind light
+	m_phongShader.bindUniform("Ia", m_ambientLight);
+	m_phongShader.bindUniform("Id", m_light.diffuse);
+	m_phongShader.bindUniform("Is", m_light.specular);
 	m_phongShader.bindUniform("LightDirection", m_light.direction);
 
-	// Bind transform
-	auto pvm = m_projection * m_view * m_bunnyTransform;
+	m_phongShader.bindUniform("cameraPosition", vec3(glm::inverse(m_view)[3]));
+
+	// Bind transform (Dragon)
+	auto pvm = m_projection * m_view * m_dragonTransform;
 	m_phongShader.bindUniform("ProjectionViewModel", pvm);
 
-	// Bind transforms for lighting
-	m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_bunnyTransform)));
+	// Bind transforms for lighting (Dragon)
+	m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_dragonTransform)));
 
-	// Draw bunny
-	m_bunnyMesh.draw();
+	// Draw Dragon
+	m_dragonMesh.draw();
 
 	aie::Gizmos::draw(m_projection * m_view);
 }

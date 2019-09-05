@@ -1,2 +1,6 @@
-﻿LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+﻿  Application3D.cpp
+c:\users\s173004\desktop\gitkraken\secondyear_computergraphics\computergraphics_opengl_app\src\application3d.cpp(107): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\s173004\desktop\gitkraken\secondyear_computergraphics\computergraphics_opengl_app\src\application3d.cpp(115): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  main.cpp
+  Generating Code...
   ComputerGraphics_OpenGL_App.vcxproj -> C:\Users\s173004\Desktop\GitKraken\SecondYear_ComputerGraphics\ComputerGraphics_OpenGL_App\x64\Debug\ComputerGraphics_OpenGL_App.exe

@@ -35,13 +35,18 @@ protected:
 
 	aie::ShaderProgram	m_shader;
 	aie::ShaderProgram	m_phongShader;
-	aie::OBJMesh		m_bunnyMesh;
-	glm::mat4			m_bunnyTransform;
+
+	// Dragon Model
+	aie::OBJMesh		m_dragonMesh;
+	glm::mat4			m_dragonTransform;
 
 	struct Light 
 	{
 		glm::vec3 direction;
+		glm::vec3 diffuse;
+		glm::vec3 specular;
 	};
 	Light	m_light;
+	glm::vec3 m_ambientLight;
 };
 
