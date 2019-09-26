@@ -2,6 +2,7 @@
 #include "Shader.h"
 #include "OBJMesh.h"
 #include "Application.h"
+#include "Mes"
 
 struct KeyFrame {
 	glm::vec3 position;
@@ -21,6 +22,15 @@ public:
 	virtual void draw();
 
 protected:
+
+	aie::Texture m_gridTexture;
+
+	Mesh*		m_quadMesh;
+	glm::mat4	m_quadTransform;
+
+
+	// ---------------------------------------------------------------
+
 	glm::vec3		m_positions[2];
 	glm::quat		m_rotations[2];
 
@@ -32,6 +42,7 @@ protected:
 	glm::mat4 m_kneeBone;
 	glm::mat4 m_ankleBone;
 
+	// ---------------------------------------------------------------
 
 	aie::ShaderProgram	m_shader;
 	aie::ShaderProgram	m_phongShader;
