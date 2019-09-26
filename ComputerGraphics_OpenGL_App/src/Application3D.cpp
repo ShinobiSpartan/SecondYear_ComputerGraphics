@@ -64,13 +64,13 @@ bool Application3D::startup()
 		return false;
 	}
 
-	if (m_gridTexture.load("./textures/numbered_grid.tga") == false) {
-		printf("Grid Texture Error! \n");
+	m_texturedShader.loadShader(aie::eShaderStage::VERTEX, "../assets/shaders/textured.vert");
+	m_texturedShader.loadShader(aie::eShaderStage::FRAGMENT, "../assets/shaders/textured.frag");
+
+	if (m_texturedShader.link() == false) {
+		printf("Textured Shader Error: %s\n", m_texturedShader.getLastError());
 		return false;
 	}
-
-	// Create simnple quad
-	m_quad
 
 	if (m_dragonMesh.load("../assets/stanford/dragon.obj") == false) {
 		printf("Dragon Mesh Error! \n");
@@ -83,6 +83,19 @@ bool Application3D::startup()
 		0, 0.5f, 0, 0,
 		0, 0, 0.5f, 0,
 		0, 0, 0, 1.0f
+	};
+
+	if (m_spearMesh.load("../assets/soulspear/soulspear.obj", true, true) == false) {
+		printf("Soulspear Mesh Error! \n");
+		return false;
+	}
+
+	m_spearTransform =
+	{
+		1,0,0,0,
+		0,1,0,0,
+		0,0,1,0,
+		0,0,0,1
 	};
 
 	m_light.diffuse = { 1,0,0 };
@@ -172,16 +185,28 @@ void Application3D::draw()
 {
 	clearScreen();
 
-	// Bind phong shader
-	m_phongShader.bind();
+	// Bind shader
+	m_texturedShader.bind();
 
-	// Bind light
-	m_phongShader.bindUniform("Ia", m_ambientLight);
-	m_phongShader.bindUniform("Id", m_light.diffuse);
-	m_phongShader.bindUniform("Is", m_light.specular);
-	m_phongShader.bindUniform("LightDirection", m_light.direction);
+	// Bind transform (Soulspear)
+	auto pvm = m_projection * m_view * m_spearTransform;
+	m_texturedShader.bindUniform("ProjectionViewModel", pvm);
 
-	m_phongShader.bindUniform("cameraPosition", vec3(glm::inverse(m_view)[3]));
+	// Draw Spear
+	m_spearMesh.draw();
+
+	
+
+	// // Bind phong shader
+	// m_phongShader.bind();
+	// 
+	// // Bind light
+	// m_phongShader.bindUniform("Ia", m_ambientLight);
+	// m_phongShader.bindUniform("Id", m_light.diffuse);
+	// m_phongShader.bindUniform("Is", m_light.specular);
+	// m_phongShader.bindUniform("LightDirection", m_light.direction);
+	// 
+	// m_phongShader.bindUniform("cameraPosition", vec3(glm::inverse(m_view)[3]));
 
 	// ---------------------------------------------------------------
 

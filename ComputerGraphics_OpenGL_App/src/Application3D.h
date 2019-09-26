@@ -2,7 +2,7 @@
 #include "Shader.h"
 #include "OBJMesh.h"
 #include "Application.h"
-#include "Mes"
+#include "Mesh.h"
 
 struct KeyFrame {
 	glm::vec3 position;
@@ -23,14 +23,14 @@ public:
 
 protected:
 
-	aie::Texture m_gridTexture;
-
-	Mesh*		m_quadMesh;
-	glm::mat4	m_quadTransform;
+	//Mesh		m_quad;
+	//Mesh		m_quadMesh;
+	//glm::mat4	m_quadTransform;
 
 
 	// ---------------------------------------------------------------
 
+	// Leg
 	glm::vec3		m_positions[2];
 	glm::quat		m_rotations[2];
 
@@ -45,11 +45,22 @@ protected:
 	// ---------------------------------------------------------------
 
 	aie::ShaderProgram	m_shader;
+	
 	aie::ShaderProgram	m_phongShader;
+
+	aie::ShaderProgram	m_texturedShader;
+
+	// ---------------------------------------------------------------
 
 	// Dragon Model
 	aie::OBJMesh		m_dragonMesh;
 	glm::mat4			m_dragonTransform;
+
+	// Soulspear Model
+	aie::OBJMesh		m_spearMesh;
+	glm::mat4			m_spearTransform;
+
+	// ---------------------------------------------------------------
 
 	struct Light 
 	{
@@ -57,6 +68,7 @@ protected:
 		glm::vec3 diffuse;
 		glm::vec3 specular;
 	};
+
 	Light	m_light;
 	glm::vec3 m_ambientLight;
 };
