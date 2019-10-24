@@ -50,6 +50,8 @@ protected:
 
 	aie::ShaderProgram	m_texturedShader;
 
+	aie::ShaderProgram m_normalMapShader;
+
 	// ---------------------------------------------------------------
 
 	// Dragon Model

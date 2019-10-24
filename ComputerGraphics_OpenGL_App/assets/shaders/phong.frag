@@ -9,9 +9,9 @@
  uniform vec3 Ia; // Ambient light colour
  uniform vec3 Id; // Diffuse light colour
  uniform vec3 Is; // Specular light colour
- uniform vec3 LightDirection;
+ uniform vec3 lightDirection;
  
- out vec4 FragColour;
+ out vec4 fragColour;
  
  uniform vec3 Ka; // Ambient material colour
  uniform vec3 Kd; // Diffuse material colour
@@ -21,7 +21,7 @@
  void main() {
 		// Ensure normal and light direction are normalised
 		vec3 N = normalize(vNormal);
-		vec3 L = normalize(LightDirection);
+		vec3 L = normalize(lightDirection);
 		
 		// Calculate lambert term (negate light direction)
 		float lambertTerm = max( 0, min( 1, dot( N, -L ) ) );
@@ -39,5 +39,5 @@
 		vec3 specular = Is * Ks * specularTerm;
 		
 		// Output final colour
-		FragColour = vec4(ambient + diffuse + specular, 1);
+		fragColour = vec4(ambient + diffuse + specular, 1);
  }

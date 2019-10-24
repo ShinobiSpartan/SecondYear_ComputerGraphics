@@ -72,6 +72,15 @@ bool Application3D::startup()
 		return false;
 	}
 
+	m_normalMapShader.loadShader(aie::eShaderStage::VERTEX, "../assets/shaders/normalmap.vert");
+	m_normalMapShader.loadShader(aie::eShaderStage::FRAGMENT, "../assets/shaders/normalmap.frag");
+
+	if (m_normalMapShader.link() == false) {
+		printf("Normal Map Shader Error: %s\n", m_normalMapShader.getLastError());
+		return false;
+	}
+
+
 	if (m_dragonMesh.load("../assets/stanford/dragon.obj") == false) {
 		printf("Dragon Mesh Error! \n");
 		return false;
@@ -98,9 +107,9 @@ bool Application3D::startup()
 		0,0,0,1
 	};
 
-	m_light.diffuse = { 1,0,0 };
-	m_light.specular = { 1,0,0 };
-	m_ambientLight = { 0.25f,0.25f,0.25f };
+	m_light.diffuse = { 1,1,1 };
+	m_light.specular = { 1,1,1 };
+	m_ambientLight = { 1,1,1 };
 	
 	return true;
 }
@@ -185,18 +194,6 @@ void Application3D::draw()
 {
 	clearScreen();
 
-	// Bind shader
-	m_texturedShader.bind();
-
-	// Bind transform (Soulspear)
-	auto pvm = m_projection * m_view * m_spearTransform;
-	m_texturedShader.bindUniform("ProjectionViewModel", pvm);
-
-	// Draw Spear
-	m_spearMesh.draw();
-
-	
-
 	// // Bind phong shader
 	// m_phongShader.bind();
 	// 
@@ -204,21 +201,51 @@ void Application3D::draw()
 	// m_phongShader.bindUniform("Ia", m_ambientLight);
 	// m_phongShader.bindUniform("Id", m_light.diffuse);
 	// m_phongShader.bindUniform("Is", m_light.specular);
-	// m_phongShader.bindUniform("LightDirection", m_light.direction);
+	// m_phongShader.bindUniform("lightDirection", m_light.direction);
 	// 
 	// m_phongShader.bindUniform("cameraPosition", vec3(glm::inverse(m_view)[3]));
 
 	// ---------------------------------------------------------------
 
-	// // Bind transform (Dragon)
-	// auto pvm = m_projection * m_view * m_dragonTransform;
-	// m_phongShader.bindUniform("ProjectionViewModel", pvm);
-	// 
-	// // Bind transforms for lighting (Dragon)
-	// m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_dragonTransform)));
-	// 
-	// // Draw Dragon
-	// m_dragonMesh.draw();
+	// // Bind Textured Shader
+	// m_texturedShader.bind();
+
+	// ---------------------------------------------------------------
+
+	// Bind Normal Map Shader
+	m_normalMapShader.bind();
+	
+	// Bind Light
+	m_normalMapShader.bindUniform("Ia", m_ambientLight);
+	m_normalMapShader.bindUniform("Id", m_light.diffuse);
+	m_normalMapShader.bindUniform("Is", m_light.specular);
+	m_normalMapShader.bindUniform("lightDirection", m_light.direction);
+	
+	m_normalMapShader.bindUniform("cameraPosition", vec3(glm::inverse(m_view)[3]));
+
+	// ---------------------------------------------------------------
+
+	//// Bind transform (Dragon)
+	//auto pvm = m_projection * m_view * m_dragonTransform;
+	//m_normalMapShader.bindUniform("ProjectionViewModel", pvm);
+	//
+	//// Bind transforms for lighting (Dragon)
+	//m_normalMapShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_dragonTransform)));
+	//
+	//// Draw Dragon
+	//m_dragonMesh.draw();
+
+	// ---------------------------------------------------------------
+
+	// Bind transform (Soulspear)
+	auto pvm = m_projection * m_view * m_spearTransform;
+	m_normalMapShader.bindUniform("ProjectionViewModel", pvm);
+
+	// Bind transforms for lighting (Soulspear)
+	m_normalMapShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_spearTransform)));
+
+	// Draw Spear
+	m_spearMesh.draw();
 
 	// ---------------------------------------------------------------
 
