@@ -22,18 +22,11 @@ public:
 	virtual void draw();
 
 protected:
-
-	//Mesh		m_quad;
-	//Mesh		m_quadMesh;
-	//glm::mat4	m_quadTransform;
-
-
-	// ---------------------------------------------------------------
-
-	// Leg
+	// Cube
 	glm::vec3		m_positions[2];
 	glm::quat		m_rotations[2];
 
+	// Leg
 	KeyFrame m_hipFrames[2];
 	KeyFrame m_kneeFrames[2];
 	KeyFrame m_ankleFrames[2];
@@ -44,23 +37,20 @@ protected:
 
 	// ---------------------------------------------------------------
 
-	aie::ShaderProgram	m_shader;
-	
+	aie::ShaderProgram	m_simpleShader;
 	aie::ShaderProgram	m_phongShader;
-
 	aie::ShaderProgram	m_texturedShader;
-
-	aie::ShaderProgram m_normalMapShader;
+	aie::ShaderProgram	m_normalMapShader;
 
 	// ---------------------------------------------------------------
-
-	// Dragon Model
-	aie::OBJMesh		m_dragonMesh;
-	glm::mat4			m_dragonTransform;
 
 	// Soulspear Model
 	aie::OBJMesh		m_spearMesh;
 	glm::mat4			m_spearTransform;
+
+	// Droid Model
+	aie::OBJMesh		m_droidMesh;
+	glm::mat4			m_droidTransform;
 
 	// ---------------------------------------------------------------
 
@@ -72,6 +62,7 @@ protected:
 	};
 
 	Light	m_light;
+	Light	m_light2;
 	glm::vec3 m_ambientLight;
 };
 
