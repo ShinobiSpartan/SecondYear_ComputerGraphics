@@ -26,6 +26,7 @@ bool Application3D::startup()
 	Gizmos::create(65535U, 65535U, 255U, 255U);
 
 #pragma region Cube Transforms
+	// Set all of the positions and rotations for the Cube movement
 	m_positions[0] = glm::vec3(10, 0, -10);
 	m_positions[1] = glm::vec3(-10, 0, -10);
 	m_rotations[0] = glm::quat(glm::vec3(0, -1, 0));
@@ -33,6 +34,7 @@ bool Application3D::startup()
 #pragma endregion
 
 #pragma region Leg Transforms
+	// Set all of the positions and rotations for the leg simulation
 	m_hipFrames[0].position = glm::vec3(-5, 5, 0);
 	m_hipFrames[0].rotation = glm::quat(glm::vec3(1, 0, 0));
 	m_hipFrames[1].position = glm::vec3(-5, 5, 0);
@@ -49,38 +51,12 @@ bool Application3D::startup()
 	m_ankleFrames[1].rotation = glm::quat(glm::vec3(0, 0, 0));
 #pragma endregion
 
-#pragma region Load Shaders
-	// Simple Shader
-	m_simpleShader.loadShader(aie::eShaderStage::VERTEX, "../assets/shaders/simple.vert");
-	m_simpleShader.loadShader(aie::eShaderStage::FRAGMENT, "../assets/shaders/simple.frag");
-
-	if (m_simpleShader.link() == false) {
-		printf("Shader Error: %s\n", m_simpleShader.getLastError());
-		return false;
-	}
-
-	// Phong Shader
-	m_phongShader.loadShader(aie::eShaderStage::VERTEX, "../assets/shaders/phong.vert");
-	m_phongShader.loadShader(aie::eShaderStage::FRAGMENT, "../assets/shaders/phong.frag");
-
-	if (m_phongShader.link() == false) {
-		printf("Phong Shader Error: %s\n", m_phongShader.getLastError());
-		return false;
-	}
-
-	// Textured Shader
-	m_texturedShader.loadShader(aie::eShaderStage::VERTEX, "../assets/shaders/textured.vert");
-	m_texturedShader.loadShader(aie::eShaderStage::FRAGMENT, "../assets/shaders/textured.frag");
-
-	if (m_texturedShader.link() == false) {
-		printf("Textured Shader Error: %s\n", m_texturedShader.getLastError());
-		return false;
-	}
-
-	// Normal Map Shader
+#pragma region Load Shader
+	// Load the Normal Map Shader
 	m_normalMapShader.loadShader(aie::eShaderStage::VERTEX, "../assets/shaders/normalmap.vert");
 	m_normalMapShader.loadShader(aie::eShaderStage::FRAGMENT, "../assets/shaders/normalmap.frag");
 
+	// If loading the Shader fails, output error
 	if (m_normalMapShader.link() == false) {
 		printf("Normal Map Shader Error: %s\n", m_normalMapShader.getLastError());
 		return false;
@@ -88,12 +64,13 @@ bool Application3D::startup()
 #pragma endregion
 
 #pragma region Load Models
-	// Spear Mesh
+	// Load the Spear Mesh
 	if (m_spearMesh.load("../assets/soulspear/soulspear.obj", true, true) == false) {
 		printf("Soulspear Mesh Error! \n");
 		return false;
 	}
 
+	// Set the scale and position for the Spear Mesh
 	m_spearTransform =
 	{
 		1,0,0,0,
@@ -102,12 +79,13 @@ bool Application3D::startup()
 		0,0,-2,1
 	};
 
-	// Droid Mesh
+	// Load the Droid Mesh
 	if (m_droidMesh.load("../assets/droid/BattleDroidT.obj", true, true) == false) {
 		printf("Droid Error! \n");
 		return false;
 	}
 
+	// Set the scale and position for the Droid Mesh
 	m_droidTransform =
 	{
 		3,0,0,0,
@@ -117,13 +95,15 @@ bool Application3D::startup()
 	};
 #pragma endregion
 	
-
+	// Set the colour for Light 1
 	m_light.diffuse = { 1, 1, 1 };
 	m_light.specular = { 1, 1, 1 };
 
+	// Set the colour for Light 2
 	m_light2.diffuse = { 1, 1, 1 };
 	m_light2.specular = { 1, 1, 1 };
 
+	// Set the colour for the Ambient Light
 	m_ambientLight = { 0, 0, 0 };
 	
 	return true;
@@ -137,24 +117,30 @@ void Application3D::shutdown()
 void Application3D::update(float deltatime)
 {
 	float time = glfwGetTime();
+	
+	// Set the camera to rotate around the centre
 	m_view = glm::lookAt(vec3(glm::cos(time * 0.5f) * 10, 10, glm::sin(time * 0.5f) *  10), glm::vec3(0,2,0), glm::vec3(0, 1, 0));
 
 	Gizmos::clear();
 
+	// Create square to draw grid
 	Gizmos::addTransform(mat4(1));
 
+	// Set colours for grid
 	vec4 white(1);
 	vec4 black(0, 0, 0, 1);
 
+	// Draw grid into Aplication
 	for (int i = 0; i < 21; ++i)
 	{
 		Gizmos::addLine(vec3(-10 + i, 0, 10), vec3(-10 + i, 0, -10), i == 10 ? white : black);
 		Gizmos::addLine(vec3(10, 0, -10 + i), vec3(-10, 0, -10 + i), i == 10 ? white : black);
 	}
 
-	// Rotate light
+	// Rotate Light 1
 	m_light.direction = glm::normalize(vec3(glm::cos(time * 2), glm::sin(time * 2), 0));
 
+	// Set Light 2 direction
 	m_light2.direction = {0.707,0.707,0};
 
 #pragma region Animate Cube
@@ -193,14 +179,16 @@ void Application3D::update(float deltatime)
 	// Update the ankle bone
 	m_ankleBone = m_kneeBone * (glm::translate(pA) * glm::toMat4(rA));
 
-	// Draw Leg
+	// Set positions for Leg
 	glm::vec3 hipPos = glm::vec3(m_hipBone[3].x, m_hipBone[3].y, m_hipBone[3].z);
 	glm::vec3 kneePos = glm::vec3(m_kneeBone[3].x, m_kneeBone[3].y, m_kneeBone[3].z);
 	glm::vec3 anklePos = glm::vec3(m_ankleBone[3].x, m_ankleBone[3].y, m_ankleBone[3].z);
 	
+	// Set Colour for the Leg
 	glm::vec4 half(0.5f);
 	glm::vec4 pink(1, 0, 1, 1);
 	
+	// Draw the Leg using cubes
 	Gizmos::addAABBFilled(hipPos, half, pink, &m_hipBone);
 	Gizmos::addAABBFilled(kneePos, half, pink, &m_kneeBone);
 	Gizmos::addAABBFilled(anklePos, half, pink, &m_ankleBone);
@@ -213,13 +201,16 @@ void Application3D::draw()
 
 	// Bind Normal Map Shader
 	m_normalMapShader.bind();
-	
-	// Bind Light
+
+	// Bind Ambient Light
 	m_normalMapShader.bindUniform("Ia", m_ambientLight);
+
+	// Bind Light 1 in the Shader
 	m_normalMapShader.bindUniform("Id", m_light.diffuse);
 	m_normalMapShader.bindUniform("Is", m_light.specular);
 	m_normalMapShader.bindUniform("lightDirection", m_light.direction);
 
+	// Bind Light 2 in the Shader
 	m_normalMapShader.bindUniform("Jd", m_light2.diffuse);
 	m_normalMapShader.bindUniform("Js", m_light2.specular);
 	m_normalMapShader.bindUniform("light2Direction", m_light2.direction);
@@ -250,5 +241,6 @@ void Application3D::draw()
 
 	// ---------------------------------------------------------------
 
+	// Output everything to the Application
 	aie::Gizmos::draw(m_projection * m_view);
 }
