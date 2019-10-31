@@ -60,6 +60,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Cube.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/s173004/Desktop/GitKraken/SecondYear_ComputerGraphics/ComputerGraphics_InEngineApplication/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
